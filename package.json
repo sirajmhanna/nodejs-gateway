@@ -1,0 +1,29 @@
+{
+  "name": "nodejs-gateway",
+  "version": "1.0.0",
+  "description": "Nodejs Gateway API",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sirajmhanna/nodejs-gateway.git"
+  },
+  "author": "sirajmhanna",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sirajmhanna/nodejs-gateway/issues"
+  },
+  "homepage": "https://github.com/sirajmhanna/nodejs-gateway#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "node-fetch": "^3.0.0",
+    "nodemon": "^2.0.14",
+    "winston": "^3.3.3"
+  }
+}
