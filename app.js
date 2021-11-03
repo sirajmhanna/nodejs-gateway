@@ -36,4 +36,7 @@ app.use((req, res, next) => {
 // Server Routes
 app.use('/api/server/', require('./api/routes/server'));
 
+// Authentication Service
+app.use(require('./api/routes/routers/authentication-service'));
+
 module.exports = app;
