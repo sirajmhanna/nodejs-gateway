@@ -36,4 +36,10 @@ route.patch('/api/authentication/password/reset/confirm',
     AuthenticationService.confirmResetPassword
 );
 
+// Generate Access Token Route
+route.post('/api/authentication/token/refresh',
+    RequestMiddlewares.generateRequestIdentifier,
+    AuthenticationService.generateAccessToken
+);
+
 module.exports = route;

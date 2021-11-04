@@ -5,7 +5,8 @@ const commonResponses = require('../../../helpers/common-responses');
 // Login Router
 exports.login = async (req, res) => {
     try {
-        logger.info(req.requestID, 'authentication-service', 'login', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
+        logger.info(req.requestID, 'authentication-service',
+            'login', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
         let response = await nodeFetch(process.env.AUTHENTICATION_SERVICE_URL + req.path,
             {
                 method: 'POST',
@@ -19,7 +20,7 @@ exports.login = async (req, res) => {
             });
         response = await response.json();
 
-        if(response.status === 'success'){
+        if (response.status === 'success') {
             logger.info(req.body.requestID, 'authentication-service', 'login', 'Set refresh token in httpOnly secured cookie', {});
             res.cookie("refreshToken", response.refreshToken.refresh, {
                 maxAge: ((1000) * response.refreshToken.time),
@@ -29,7 +30,7 @@ exports.login = async (req, res) => {
             });
             delete response.refreshToken;
         }
-        
+
         logger.info(req.requestID, 'authentication-service', 'login', 'Returning response', {});
         return res.status(response.code).json(response);
     } catch (error) {
@@ -41,7 +42,8 @@ exports.login = async (req, res) => {
 // Logout Router
 exports.logout = async (req, res) => {
     try {
-        logger.info(req.requestID, 'authentication-service', 'logout', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
+        logger.info(req.requestID, 'authentication-service',
+            'logout', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
         let response = await nodeFetch(process.env.AUTHENTICATION_SERVICE_URL + req.path,
             {
                 method: 'POST',
@@ -68,7 +70,8 @@ exports.logout = async (req, res) => {
 // Change Password Router
 exports.changePassword = async (req, res) => {
     try {
-        logger.info(req.requestID, 'authentication-service', 'changePassword', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
+        logger.info(req.requestID, 'authentication-service',
+            'changePassword', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
         let response = await nodeFetch(process.env.AUTHENTICATION_SERVICE_URL + req.path,
             {
                 method: 'PATCH',
@@ -93,7 +96,8 @@ exports.changePassword = async (req, res) => {
 // Request Reset Password Router
 exports.requestResetPassword = async (req, res) => {
     try {
-        logger.info(req.requestID, 'authentication-service', 'requestResetPassword', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
+        logger.info(req.requestID, 'authentication-service',
+            'requestResetPassword', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
 
         let url = new URL(process.env.AUTHENTICATION_SERVICE_URL + req.path),
             params = {
@@ -121,7 +125,8 @@ exports.requestResetPassword = async (req, res) => {
 // Confirm Reset Password Router
 exports.confirmResetPassword = async (req, res) => {
     try {
-        logger.info(req.requestID, 'authentication-service', 'confirmResetPassword', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
+        logger.info(req.requestID, 'authentication-service',
+            'confirmResetPassword', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
         let response = await nodeFetch(process.env.AUTHENTICATION_SERVICE_URL + req.path,
             {
                 method: 'PATCH',
@@ -138,6 +143,30 @@ exports.confirmResetPassword = async (req, res) => {
         return res.status(response.code).json(response);
     } catch (error) {
         logger.error(req.requestID, 'authentication-service', 'confirmResetPassword', 'Server Error', { error: error.toString() });
+        return res.status(500).json(commonResponses.serverError);
+    }
+};
+
+// Generate Access Token Router
+exports.generateAccessToken = async (req, res) => {
+    try {
+        logger.info(req.requestID, 'authentication-service',
+            'generateAccessToken', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
+        let response = await nodeFetch(process.env.AUTHENTICATION_SERVICE_URL + req.path,
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    requestID: req.requestID,
+                    refreshToken: req.cookies['refreshToken']
+                }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+        response = await response.json();
+
+        logger.info(req.requestID, 'authentication-service', 'generateAccessToken', 'Returning response', {});
+        return res.status(response.code).json(response);
+    } catch (error) {
+        logger.error(req.requestID, 'authentication-service', 'generateAccessToken', 'Server Error', { error: error.toString() });
         return res.status(500).json(commonResponses.serverError);
     }
 };
