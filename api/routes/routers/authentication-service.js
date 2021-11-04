@@ -24,4 +24,10 @@ route.patch('/api/authentication/password/change',
     AuthenticationService.changePassword
 );
 
+// Request Reset Password Route
+route.get('/api/authentication/password/reset',
+    RequestMiddlewares.generateRequestIdentifier,
+    AuthenticationService.requestResetPassword
+);
+
 module.exports = route;

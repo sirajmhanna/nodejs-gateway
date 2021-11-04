@@ -89,3 +89,31 @@ exports.changePassword = async (req, res) => {
         return res.status(500).json(commonResponses.serverError);
     }
 };
+
+// Request Reset Password Router
+exports.requestResetPassword = async (req, res) => {
+    try {
+        logger.info(req.requestID, 'authentication-service', 'requestResetPassword', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
+
+        let url = new URL(process.env.AUTHENTICATION_SERVICE_URL + req.path),
+            params = {
+                requestID: req.requestID,
+                email: req.query.email,
+                frontendBaseURL: process.env.FRONTEND_BASE_URL
+            };
+        await Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+
+        let response = await nodeFetch(url,
+            {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+        response = await response.json();
+
+        logger.info(req.requestID, 'authentication-service', 'requestResetPassword', 'Returning response', {});
+        return res.status(response.code).json(response);
+    } catch (error) {
+        logger.error(req.requestID, 'authentication-service', 'requestResetPassword', 'Server Error', { error: error.toString() });
+        return res.status(500).json(commonResponses.serverError);
+    }
+};
