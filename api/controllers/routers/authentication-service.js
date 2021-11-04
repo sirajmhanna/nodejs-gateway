@@ -117,3 +117,27 @@ exports.requestResetPassword = async (req, res) => {
         return res.status(500).json(commonResponses.serverError);
     }
 };
+
+// Confirm Reset Password Router
+exports.confirmResetPassword = async (req, res) => {
+    try {
+        logger.info(req.requestID, 'authentication-service', 'confirmResetPassword', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
+        let response = await nodeFetch(process.env.AUTHENTICATION_SERVICE_URL + req.path,
+            {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    requestID: req.requestID,
+                    password: req.body.password,
+                    pin: req.body.pin
+                }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+        response = await response.json();
+
+        logger.info(req.requestID, 'authentication-service', 'confirmResetPassword', 'Returning response', {});
+        return res.status(response.code).json(response);
+    } catch (error) {
+        logger.error(req.requestID, 'authentication-service', 'confirmResetPassword', 'Server Error', { error: error.toString() });
+        return res.status(500).json(commonResponses.serverError);
+    }
+};

@@ -30,4 +30,10 @@ route.get('/api/authentication/password/reset',
     AuthenticationService.requestResetPassword
 );
 
+// Confirm Reset Password Route
+route.patch('/api/authentication/password/reset/confirm',
+    RequestMiddlewares.generateRequestIdentifier,
+    AuthenticationService.confirmResetPassword
+);
+
 module.exports = route;
