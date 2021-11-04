@@ -47,6 +47,7 @@ exports.logout = async (req, res) => {
                 method: 'POST',
                 body: JSON.stringify({
                     requestID: req.requestID,
+                    userData: req.userData,
                     refreshToken: req.cookies['refreshToken']
                 }),
                 headers: {
@@ -61,5 +62,30 @@ exports.logout = async (req, res) => {
     } catch (error) {
         logger.error(req.requestID, 'authentication-service', 'logout', 'Server Error', { error: error.toString() });
         return res.status(500).json(commonResponses.genericServerError);
+    }
+};
+
+// Change Password Router
+exports.changePassword = async (req, res) => {
+    try {
+        logger.info(req.requestID, 'authentication-service', 'changePassword', 'Starting execution :: Calling authentication service', { path: req.path, ipAddress: req.ip });
+        let response = await nodeFetch(process.env.AUTHENTICATION_SERVICE_URL + req.path,
+            {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    requestID: req.requestID,
+                    userData: req.userData,
+                    currentPassword: req.body.currentPassword,
+                    newPassword: req.body.newPassword
+                }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+        response = await response.json();
+
+        logger.info(req.requestID, 'authentication-service', 'changePassword', 'Returning response', {});
+        return res.status(response.code).json(response);
+    } catch (error) {
+        logger.error(req.requestID, 'authentication-service', 'changePassword', 'Server Error', { error: error.toString() });
+        return res.status(500).json(commonResponses.serverError);
     }
 };

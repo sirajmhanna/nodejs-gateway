@@ -17,4 +17,11 @@ route.post('/api/authentication/logout',
     AuthenticationService.logout
 );
 
+// Change Password Route
+route.patch('/api/authentication/password/change',
+    RequestMiddlewares.generateRequestIdentifier,
+    AuthenticationMiddleware.isAuthenticated,
+    AuthenticationService.changePassword
+);
+
 module.exports = route;
