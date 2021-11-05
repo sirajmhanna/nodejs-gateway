@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
         {
-            name: `${process.env.ENVIRONMENT}-gateway`,
+            name: `${process.env.ENVIRONMENT}-nodejs-gateway`,
             script: "./server.js",
             watch: false,
             env: {
