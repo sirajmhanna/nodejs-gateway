@@ -1,4 +1,4 @@
-const logger = require('../../helpers/winston');
+const logger = require("../../helpers/winston");
 
 /**
  * Server Health Controller
@@ -17,12 +17,18 @@ const logger = require('../../helpers/winston');
  * @returns { Object }
  */
 exports.health = (req, res) => {
-    logger.info(new Date().getTime(), 'server', 'health', 'Checking server health', { ipAddress: req.ip });
-    return res.status(200).json({
-        status: 'success',
-        message: 'Server is alive',
-        data: {
-            service: process.env.SERVICE_NAME
-        }
-    });
+  logger.info(
+    new Date().getTime(),
+    "server",
+    "health",
+    "Checking server health",
+    { ipAddress: req.ip }
+  );
+  return res.status(200).json({
+    status: "success",
+    message: "Server is alive",
+    data: {
+      service: process.env.SERVICE_NAME,
+    },
+  });
 };
